@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 
@@ -65,6 +66,18 @@ export default function Painel() {
           Sair
         </button>
       </div>
+
+      <Link
+        to="/vendas"
+        className="flex items-center justify-center gap-2 rounded-2xl bg-(--color-accent) text-(--color-bg) font-semibold py-4 mb-5"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M3 4H5L6.4 14.2C6.55 15.24 7.44 16 8.5 16H17.5C18.53 16 19.4 15.28 19.58 14.27L21 6H6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="9" cy="20" r="1.4" stroke="currentColor" strokeWidth="1.8" />
+          <circle cx="17" cy="20" r="1.4" stroke="currentColor" strokeWidth="1.8" />
+        </svg>
+        Nova venda
+      </Link>
 
       {/* Saldo do caixa */}
       <div className="rounded-2xl bg-(--color-surface) border border-(--color-border) p-5 mb-5">

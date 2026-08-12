@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 
 const itens = [
   { to: '/', label: 'Painel', icon: PainelIcon, fim: true },
+  { to: '/vendas', label: 'Vendas', icon: VendasIcon },
   { to: '/estoque', label: 'Estoque', icon: EstoqueIcon },
   { to: '/caixa', label: 'Caixa', icon: CaixaIcon },
 ]
@@ -44,6 +45,16 @@ function PainelIcon({ ativo }) {
       <rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" strokeWidth="1.8" />
       <rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.8" />
       <rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
+  )
+}
+
+function VendasIcon({ ativo }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M3 4H5L6.4 14.2C6.55 15.24 7.44 16 8.5 16H17.5C18.53 16 19.4 15.28 19.58 14.27L21 6H6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="9" cy="20" r="1.4" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="17" cy="20" r="1.4" stroke="currentColor" strokeWidth="1.6" />
     </svg>
   )
 }

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import Painel from './pages/Painel'
+import Vendas from './pages/Vendas'
 import Estoque from './pages/Estoque'
 import Caixa from './pages/Caixa'
 import BottomNav from './components/BottomNav'
@@ -25,6 +26,7 @@ function AppShell() {
     <>
       <Routes>
         <Route path="/" element={<Painel />} />
+        <Route path="/vendas" element={<Vendas />} />
         <Route path="/estoque" element={<Estoque />} />
         <Route path="/caixa" element={<Caixa />} />
         <Route path="*" element={<Navigate to="/" replace />} />
