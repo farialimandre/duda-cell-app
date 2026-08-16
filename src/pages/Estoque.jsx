@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 
@@ -14,12 +15,15 @@ function IconeFoto() {
 
 export default function Estoque() {
   const { colaborador } = useAuth()
+  const location = useLocation()
   const [produtos, setProdutos] = useState([])
   const [categorias, setCategorias] = useState([])
   const [carregando, setCarregando] = useState(true)
   const [mostrarForm, setMostrarForm] = useState(false)
   const [busca, setBusca] = useState('')
-  const [categoriaAtiva, setCategoriaAtiva] = useState('todos')
+  const [categoriaAtiva, setCategoriaAtiva] = useState(
+    location.state?.categoriaId || 'todos'
+  )
   const [enviandoFoto, setEnviandoFoto] = useState(false)
   const inputFotoRef = useRef(null)
 
@@ -61,6 +65,14 @@ export default function Estoque() {
 
   useEffect(() => {
     carregar()
+
+    const canal = supabase
+      .channel('estoque-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'produtos' }, carregar)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'movimentacoes_estoque' }, carregar)
+      .subscribe()
+
+    return () => supabase.removeChannel(canal)
   }, [])
 
   async function handleSelecionarFoto(e) {
@@ -288,7 +300,6 @@ export default function Estoque() {
             ref={inputFotoRef}
             type="file"
             accept="image/*"
-            capture="environment"
             onChange={handleSelecionarFoto}
             className="hidden"
           />
@@ -545,7 +556,6 @@ export default function Estoque() {
               ref={inputFotoDetalheRef}
               type="file"
               accept="image/*"
-              capture="environment"
               onChange={handleSelecionarFotoDetalhe}
               className="hidden"
             />

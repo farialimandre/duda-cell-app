@@ -5,7 +5,9 @@ import Painel from './pages/Painel'
 import Vendas from './pages/Vendas'
 import Estoque from './pages/Estoque'
 import Caixa from './pages/Caixa'
+import Relatorios from './pages/Relatorios'
 import BottomNav from './components/BottomNav'
+import Falar from './components/Falar'
 
 function AppShell() {
   const { session, carregando } = useAuth()
@@ -29,8 +31,10 @@ function AppShell() {
         <Route path="/vendas" element={<Vendas />} />
         <Route path="/estoque" element={<Estoque />} />
         <Route path="/caixa" element={<Caixa />} />
+        <Route path="/relatorios" element={<Relatorios />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <Falar />
       <BottomNav />
     </>
   )

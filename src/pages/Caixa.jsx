@@ -225,6 +225,7 @@ export default function Caixa() {
           {tipoLancamento === 'entrada' ? (
             <>
               <option value="venda">Venda</option>
+              <option value="manutencao">Manutenção</option>
               <option value="deposito">Depósito</option>
               <option value="outro">Outro</option>
             </>
