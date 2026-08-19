@@ -19,6 +19,8 @@ export default function Vendas() {
   const [clienteNome, setClienteNome] = useState('')
   const [finalizando, setFinalizando] = useState(false)
   const [vendaConcluida, setVendaConcluida] = useState(null)
+  const [tipoDesconto, setTipoDesconto] = useState('valor') // 'valor' ou 'percentual'
+  const [desconto, setDesconto] = useState('')
 
   async function carregarSessao() {
     setCarregandoSessao(true)
@@ -114,6 +116,15 @@ export default function Vendas() {
 
   const total = carrinho.reduce((s, item) => s + item.preco * item.quantidade, 0)
 
+  const valorDesconto = (() => {
+    const n = parseFloat(desconto) || 0
+    if (n <= 0) return 0
+    const bruto = tipoDesconto === 'percentual' ? (total * n) / 100 : n
+    return Math.min(bruto, total) // nunca deixa o desconto passar do total
+  })()
+
+  const totalComDesconto = total - valorDesconto
+
   async function finalizarVenda() {
     if (!sessaoAberta || carrinho.length === 0) return
     setFinalizando(true)
@@ -125,7 +136,7 @@ export default function Vendas() {
         colaborador_id: colaborador?.id,
         caixa_sessao_id: sessaoAberta.id,
         forma_pagamento: formaPagamento,
-        valor_total: total,
+        valor_total: totalComDesconto,
       })
       .select()
       .single()
@@ -162,21 +173,28 @@ export default function Vendas() {
       }
     }
 
+    const descricaoDesconto =
+      valorDesconto > 0
+        ? ` (desconto de ${valorDesconto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})`
+        : ''
+
     await supabase.from('movimentacoes_financeiras').insert({
       caixa_sessao_id: sessaoAberta.id,
       tipo: 'entrada',
       categoria: 'venda',
       forma_pagamento: formaPagamento,
-      valor: total,
-      descricao: clienteNome ? `Venda - ${clienteNome}` : 'Venda',
+      valor: totalComDesconto,
+      descricao: (clienteNome ? `Venda - ${clienteNome}` : 'Venda') + descricaoDesconto,
       referencia_venda_id: venda.id,
       colaborador_id: colaborador?.id,
     })
 
-    setVendaConcluida({ total, itens: carrinho.length })
+    setVendaConcluida({ total: totalComDesconto, itens: carrinho.length })
     setCarrinho([])
     setClienteNome('')
     setFormaPagamento('dinheiro')
+    setDesconto('')
+    setTipoDesconto('valor')
     setFinalizando(false)
     carregarProdutos()
   }
@@ -284,10 +302,64 @@ export default function Vendas() {
             ))}
           </ul>
 
-          <div className="flex items-center justify-between border-t border-(--color-border) pt-3 mb-3">
+          {/* Desconto */}
+          <div className="flex items-center gap-2 border-t border-(--color-border) pt-3 mb-1">
+            <div className="flex rounded-lg overflow-hidden shrink-0 border border-(--color-border)">
+              <button
+                type="button"
+                onClick={() => setTipoDesconto('valor')}
+                className={`px-3 py-2 text-xs font-medium ${
+                  tipoDesconto === 'valor'
+                    ? 'bg-(--color-accent) text-(--color-bg)'
+                    : 'bg-(--color-surface-2) text-(--color-text-dim)'
+                }`}
+              >
+                R$
+              </button>
+              <button
+                type="button"
+                onClick={() => setTipoDesconto('percentual')}
+                className={`px-3 py-2 text-xs font-medium ${
+                  tipoDesconto === 'percentual'
+                    ? 'bg-(--color-accent) text-(--color-bg)'
+                    : 'bg-(--color-surface-2) text-(--color-text-dim)'
+                }`}
+              >
+                %
+              </button>
+            </div>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="Desconto (opcional)"
+              value={desconto}
+              onChange={(e) => setDesconto(e.target.value)}
+              className="campo flex-1"
+            />
+          </div>
+
+          {valorDesconto > 0 && (
+            <div className="flex items-center justify-between text-xs mb-2">
+              <span className="text-(--color-text-dim)">Subtotal</span>
+              <span className="font-(family-name:--font-mono) text-(--color-text-faint)">
+                {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+              </span>
+            </div>
+          )}
+          {valorDesconto > 0 && (
+            <div className="flex items-center justify-between text-xs mb-2">
+              <span className="text-(--color-out)">Desconto</span>
+              <span className="font-(family-name:--font-mono) text-(--color-out)">
+                − {valorDesconto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+              </span>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between pt-1 mb-3">
             <span className="text-(--color-text-dim) text-sm">Total</span>
             <span className="font-(family-name:--font-mono) text-(--color-accent) text-xl font-medium">
-              {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+              {totalComDesconto.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
             </span>
           </div>
 
