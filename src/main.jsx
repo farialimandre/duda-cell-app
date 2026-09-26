@@ -6,8 +6,8 @@ import App from './App.jsx'
 function mostrarErroNaTela(titulo, detalhe) {
   const root = document.getElementById('root')
   root.innerHTML = `
-    <div style="min-height:100vh;background:#12151C;color:#F87171;padding:24px;font-family:monospace;font-size:14px;white-space:pre-wrap;">
-      <h1 style="color:#fff;font-size:18px;margin-bottom:12px;">${titulo}</h1>
+    <div style="min-height:100vh;background:#F5F6F1;color:#B23B30;padding:24px;font-family:monospace;font-size:14px;white-space:pre-wrap;">
+      <h1 style="color:#181B15;font-size:18px;margin-bottom:12px;">${titulo}</h1>
       ${detalhe}
     </div>
   `

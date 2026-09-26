@@ -137,20 +137,20 @@ export default function Relatorios() {
             <AreaChart data={dadosGrafico}>
               <defs>
                 <linearGradient id="corGrafico" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#16E0BD" stopOpacity={0.35} />
-                  <stop offset="95%" stopColor="#16E0BD" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#0C7A63" stopOpacity={0.28} />
+                  <stop offset="95%" stopColor="#0C7A63" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2C3341" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#DCDFD3" vertical={false} />
               <XAxis
                 dataKey="nome"
-                stroke="#5B6270"
+                stroke="#93968A"
                 fontSize={11}
                 tickLine={false}
                 axisLine={false}
               />
               <YAxis
-                stroke="#5B6270"
+                stroke="#93968A"
                 fontSize={11}
                 tickLine={false}
                 axisLine={false}
@@ -159,18 +159,18 @@ export default function Relatorios() {
               />
               <Tooltip
                 contentStyle={{
-                  background: '#1B202B',
-                  border: '1px solid #2C3341',
+                  background: '#FFFFFF',
+                  border: '1px solid #DCDFD3',
                   borderRadius: 8,
                   fontSize: 12,
                 }}
-                labelStyle={{ color: '#E8EAED' }}
+                labelStyle={{ color: '#181B15' }}
                 formatter={(v) => [formatarMoeda(v), 'Faturado']}
               />
               <Area
                 type="monotone"
                 dataKey="total"
-                stroke="#16E0BD"
+                stroke="#0C7A63"
                 strokeWidth={2}
                 fill="url(#corGrafico)"
               />
