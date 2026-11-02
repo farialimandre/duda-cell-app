@@ -1,24 +1,20 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   plugins: [
     react(),
-    tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'Duda Cell Celulares - Gestão',
-        short_name: 'Duda Cell',
-        description: 'Controle de estoque, vendas e caixa - Duda Cell Celulares',
-        theme_color: '#F5F6F1',
-        background_color: '#F5F6F1',
+        name: 'CellControle',
+        short_name: 'CellControle',
+        description: 'Controle total para loja de celular',
+        theme_color: '#0A0A0A',
+        background_color: '#0A0A0A',
         display: 'standalone',
-        orientation: 'portrait',
-        start_url: '/',
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -29,14 +25,13 @@ export default defineConfig({
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
           }
         ]
+      },
+      workbox: {
+        maximumFileSizeToCacheInBytes: 7 * 1024 * 1024,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globIgnores: ['**/kit.html']
       }
     })
   ]
