@@ -14,14 +14,13 @@ import Ranking from './pages/Ranking'
 import Tickets from './pages/Tickets'
 import Login from './pages/Login'
 import CadastroVendedor from './pages/CadastroVendedor'
+import AdminListas from './pages/AdminListas'
 import { useAuth } from './context/AuthContext'
 
 function AppShell(){
   const { colaborador, carregando } = useAuth()
   if(carregando) return <div className="px-5 pt-10">Carregando...</div>
   
-  // Rota pública de cadastro não precisa estar logado
-  // As outras precisam
   return (
     <>
       <Routes>
@@ -40,6 +39,7 @@ function AppShell(){
             <Route path="/comissoes" element={<Comissoes />} />
             <Route path="/ranking" element={<Ranking />} />
             <Route path="/tickets" element={<Tickets />} />
+            <Route path="/admin-listas" element={<AdminListas />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         )}
