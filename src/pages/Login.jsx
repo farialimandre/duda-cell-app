@@ -1,22 +1,26 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+
 export default function Login(){
   const [celular, setCelular] = useState('')
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
-  const navigate = useNavigate()
+
   function handleLogin(e){
     e.preventDefault()
     const celLimpo = celular.replace(/\D/g,'')
     if(celLimpo.includes('13981114362') && senha === '4362'){
-      const user = {id: '40f343f6-098f-4a96-a079-de8002abd7c6', nome: 'Andre', celular: '(13) 98111-4362', cargo: 'dono'}
-      localStorage.setItem('colaborador', JSON.stringify(user))
+      localStorage.setItem('colaborador', JSON.stringify({
+        id: '40f343f6-098f-4a96-a079-de8002abd7c6',
+        nome: 'Andre',
+        celular: '(13) 98111-4362',
+        cargo: 'dono'
+      }))
       window.location.href = '/'
-      return
     } else {
-      setErro('Use (13) 98111-4362 e 4362')
+      setErro('Use (13) 98111-4362 e senha 4362')
     }
   }
+
   return (
     <div style={{minHeight:'100vh', background:'#0A0A0A', display:'flex', alignItems:'center', justifyContent:'center', padding:20}}>
       <div style={{background:'#1a1a1a', padding:32, borderRadius:16, width:'100%', maxWidth:380, border:'1px solid #C9A86A'}}>
