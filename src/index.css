@@ -8,9 +8,45 @@ body {
   font-family: -apple-system, sans-serif;
   min-height: 100vh;
   margin: 0;
+  padding-bottom: 80px;
 }
 
 #root {
   min-height: 100vh;
   background: #0A0A0A;
+}
+
+/* Conserta todos inputs brancos feios */
+input, textarea, select {
+  background: #0A0A0A !important;
+  border: 1px solid #333 !important;
+  color: #fff !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+  width: 100% !important;
+  outline: none !important;
+  font-size: 14px !important;
+}
+
+/* Conserta todos botões */
+button {
+  cursor: pointer !important;
+  border-radius: 8px !important;
+}
+
+/* Conserta links azuis feios */
+a {
+  color: #C9A86A !important;
+  text-decoration: none !important;
+}
+
+/* Esconde bolinhas da lista roxa */
+ul {
+  list-style: none !important;
+  padding: 0 !important;
+}
+
+/* Força fundo preto */
+div {
+  box-sizing: border-box;
 }
