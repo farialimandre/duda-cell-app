@@ -17,6 +17,7 @@ import Login from './pages/Login'
 import CadastroVendedor from './pages/CadastroVendedor'
 import AdminListas from './pages/AdminListas'
 import MateriaisVenda from './pages/MateriaisVenda'
+import Treinamento from './pages/Treinamento'
 
 function AppShell(){
   const { colaborador, carregando } = useAuth()
