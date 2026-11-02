@@ -39,7 +39,7 @@ export default function Login() {
         </div>
 
         <h1 className="font-(family-name:--font-display) text-2xl font-semibold text-center text-(--color-text)">
-          Duda Cell Celulares
+          Cell Controle
         </h1>
         <p className="text-center text-(--color-text-dim) text-sm mt-1 mb-8">
           Gestão de estoque, vendas e caixa
