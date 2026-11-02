@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { useEffect, useState, createContext, useContext } from 'react'
+import { useState, createContext, useContext } from 'react'
 import Painel from './pages/Painel'
 import Vendas from './pages/Vendas'
 import Estoque from './pages/Estoque'
@@ -23,12 +23,6 @@ function AppShell(){
   const [user, setUser] = useState(()=>{
     try{ const s = localStorage.getItem('colaborador'); return s ? JSON.parse(s) : null }catch{ return null }
   })
-  useEffect(()=>{
-    const onStorage = ()=>{ try{ const s = localStorage.getItem('colaborador'); setUser(s ? JSON.parse(s) : null) }catch{} }
-    window.addEventListener('storage', onStorage)
-    return ()=> window.removeEventListener('storage', onStorage)
-  },[])
-  if(user === undefined) return null
   return (
     <AuthContext.Provider value={{colaborador:user, setColaborador:setUser, carregando:false}}>
       <Routes>
