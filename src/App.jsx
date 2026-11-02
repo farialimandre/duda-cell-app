@@ -41,6 +41,7 @@ function AppShell(){
             <Route path="/tickets" element={<Tickets />} />
             <Route path="/admin-listas" element={<AdminListas />} />
             <Route path="/materiais-venda" element={<MateriaisVenda />} />
+            <Route path="/treinamento" element={<Treinamento />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         )}
