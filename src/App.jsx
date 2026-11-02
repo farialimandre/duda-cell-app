@@ -15,12 +15,12 @@ import Tickets from './pages/Tickets'
 import Login from './pages/Login'
 import CadastroVendedor from './pages/CadastroVendedor'
 import AdminListas from './pages/AdminListas'
+import MateriaisVenda from './pages/MateriaisVenda'
 import { useAuth } from './context/AuthContext'
 
 function AppShell(){
   const { colaborador, carregando } = useAuth()
   if(carregando) return <div className="px-5 pt-10">Carregando...</div>
-  
   return (
     <>
       <Routes>
@@ -40,12 +40,23 @@ function AppShell(){
             <Route path="/ranking" element={<Ranking />} />
             <Route path="/tickets" element={<Tickets />} />
             <Route path="/admin-listas" element={<AdminListas />} />
+            <Route path="/materiais-venda" element={<MateriaisVenda />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         )}
       </Routes>
       {colaborador && <><Falar /><BottomNav /></>}
     </>
+  )
+}
+
+export default function App(){
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppShell />
+      </AuthProvider>
+    </BrowserRouter>
   )
 }
 
