@@ -1,9 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { supabase } from '../lib/supabaseClient'
+
 const AuthContext = createContext({})
+
 export function AuthProvider({children}){
   const [colaborador, setColaborador] = useState(null)
   const [carregando, setCarregando] = useState(true)
+
   useEffect(()=>{
     const salvo = localStorage.getItem('colaborador')
     if(salvo){
@@ -29,6 +32,14 @@ export function AuthProvider({children}){
     }
     check()
   }, [])
-  return <AuthContext.Provider value={{colaborador, setColaborador, carregando}}>{children}</AuthContext.Provider>
+
+  return (
+    <AuthContext.Provider value={{colaborador, setColaborador, carregando}}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
-export function useAuth(){return useContext(AuthContext)}
+
+export function useAuth(){
+  return useContext(AuthContext)
+}
