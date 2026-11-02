@@ -18,15 +18,33 @@ import CadastroVendedor from './pages/CadastroVendedor'
 import AdminListas from './pages/AdminListas'
 import MateriaisVenda from './pages/MateriaisVenda'
 import Treinamento from './pages/Treinamento'
+import { useEffect, useState } from 'react'
 
 function AppShell(){
-  const { colaborador, carregando } = useAuth()
-  if(carregando) return <div className="px-5 pt-10">Carregando...</div>
+  const { colaborador, carregando, setColaborador } = useAuth()
+  const [localColab, setLocalColab] = useState(null)
+  const [localCarregando, setLocalCarregando] = useState(true)
+  useEffect(()=>{
+    const salvo = localStorage.getItem('colaborador')
+    if(salvo){
+      try{
+        const u = JSON.parse(salvo)
+        if(u && u.celular){
+          setLocalColab(u)
+          if(setColaborador) setColaborador(u)
+        }
+      }catch(e){}
+    }
+    setLocalCarregando(false)
+  }, [setColaborador])
+  const user = colaborador || localColab
+  const isLoading = carregando && localCarregando
+  if(isLoading) return <div className="px-5 pt-10">Carregando...</div>
   return (
     <>
       <Routes>
         <Route path="/cadastro-vendedor" element={<CadastroVendedor />} />
-        {!colaborador ? (
+        {!user ? (
           <Route path="*" element={<Login />} />
         ) : (
           <>
@@ -47,7 +65,7 @@ function AppShell(){
           </>
         )}
       </Routes>
-      {colaborador && <><Falar /><BottomNav /></>}
+      {user && <><Falar /><BottomNav /></>}
     </>
   )
 }
