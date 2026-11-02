@@ -1,48 +1,55 @@
-import CadastroVendedor from './pages/CadastroVendedor'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from './context/AuthContext'
-import Login from './pages/Login'
+import { AuthProvider } from './context/AuthContext'
+import BottomNav from './components/BottomNav'
+import Falar from './components/Falar'
 import Painel from './pages/Painel'
 import Vendas from './pages/Vendas'
 import Estoque from './pages/Estoque'
 import Caixa from './pages/Caixa'
 import Relatorios from './pages/Relatorios'
-import BottomNav from './components/BottomNav'
-import Falar from './components/Falar'
+import OrdemServico from './pages/OrdemServico'
+import Suporte from './pages/Suporte'
+import Comissoes from './pages/Comissoes'
+import Ranking from './pages/Ranking'
+import Tickets from './pages/Tickets'
+import Login from './pages/Login'
+import CadastroVendedor from './pages/CadastroVendedor'
+import { useAuth } from './context/AuthContext'
 
-function AppShell() {
-  const { session, carregando } = useAuth()
-
-  if (carregando) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-(--color-bg)">
-        <div className="scan-frame w-14 h-14" />
-      </div>
-    )
-  }
-
-  if (!session) {
-    return <Login />
-  }
-
+function AppShell(){
+  const { colaborador, carregando } = useAuth()
+  if(carregando) return <div className="px-5 pt-10">Carregando...</div>
+  
+  // Rota pública de cadastro não precisa estar logado
+  // As outras precisam
   return (
     <>
       <Routes>
         <Route path="/cadastro-vendedor" element={<CadastroVendedor />} />
-        <Route path="/" element={<Painel />} />
-        <Route path="/vendas" element={<Vendas />} />
-        <Route path="/estoque" element={<Estoque />} />
-        <Route path="/caixa" element={<Caixa />} />
-        <Route path="/relatorios" element={<Relatorios />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {!colaborador ? (
+          <Route path="*" element={<Login />} />
+        ) : (
+          <>
+            <Route path="/" element={<Painel />} />
+            <Route path="/vendas" element={<Vendas />} />
+            <Route path="/estoque" element={<Estoque />} />
+            <Route path="/caixa" element={<Caixa />} />
+            <Route path="/relatorios" element={<Relatorios />} />
+            <Route path="/os" element={<OrdemServico />} />
+            <Route path="/suporte" element={<Suporte />} />
+            <Route path="/comissoes" element={<Comissoes />} />
+            <Route path="/ranking" element={<Ranking />} />
+            <Route path="/tickets" element={<Tickets />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </>
+        )}
       </Routes>
-      <Falar />
-      <BottomNav />
+      {colaborador && <><Falar /><BottomNav /></>}
     </>
   )
 }
 
-export default function App() {
+export default function App(){
   return (
     <BrowserRouter>
       <AuthProvider>
