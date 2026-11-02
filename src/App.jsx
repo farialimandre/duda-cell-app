@@ -28,6 +28,7 @@ function AppShell() {
   return (
     <>
       <Routes>
+        <Route path="/cadastro-vendedor" element={<CadastroVendedor />} />
         <Route path="/" element={<Painel />} />
         <Route path="/vendas" element={<Vendas />} />
         <Route path="/estoque" element={<Estoque />} />
