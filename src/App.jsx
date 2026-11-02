@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
+import { useAuth } from './context/AuthContext'
 import BottomNav from './components/BottomNav'
 import Falar from './components/Falar'
 import Painel from './pages/Painel'
@@ -16,7 +17,6 @@ import Login from './pages/Login'
 import CadastroVendedor from './pages/CadastroVendedor'
 import AdminListas from './pages/AdminListas'
 import MateriaisVenda from './pages/MateriaisVenda'
-import { useAuth } from './context/AuthContext'
 
 function AppShell(){
   const { colaborador, carregando } = useAuth()
@@ -47,16 +47,6 @@ function AppShell(){
       </Routes>
       {colaborador && <><Falar /><BottomNav /></>}
     </>
-  )
-}
-
-export default function App(){
-  return (
-    <BrowserRouter>
-      <AuthProvider>
-        <AppShell />
-      </AuthProvider>
-    </BrowserRouter>
   )
 }
 
