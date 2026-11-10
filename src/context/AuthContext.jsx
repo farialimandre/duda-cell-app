@@ -1,45 +1,66 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { supabase } from '../lib/supabaseClient'
+import { supabase, celularParaEmail } from '../lib/supabaseClient'
 
-const AuthContext = createContext({})
+const AuthContext = createContext(null)
 
-export function AuthProvider({children}){
+export function AuthProvider({ children }) {
+  const [session, setSession] = useState(null)
   const [colaborador, setColaborador] = useState(null)
   const [carregando, setCarregando] = useState(true)
 
-  useEffect(()=>{
-    const salvo = localStorage.getItem('colaborador')
-    if(salvo){
-      try{
-        const user = JSON.parse(salvo)
-        if(user && user.celular && user.celular.includes('98111')){
-          setColaborador(user)
-          setCarregando(false)
-          return
-        }
-      }catch(e){}
-    }
-    async function check(){
-      try{
-        const {data: {session}} = await supabase.auth.getSession()
-        if(session?.user){
-          const {data} = await supabase.from('colaboradores').select('*').eq('id', session.user.id).single()
-          if(data) setColaborador(data)
-          else setColaborador({id: session.user.id, nome: 'Andre', celular: '(13) 98111-4362', cargo: 'dono'})
-        }
-      }catch(e){}
+  async function carregarColaborador(userId) {
+    const { data, error } = await supabase
+      .from('colaboradores')
+      .select('id, nome, cargo, ativo')
+      .eq('id', userId)
+      .single()
+
+    if (!error) setColaborador(data)
+  }
+
+  useEffect(() => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      setSession(session)
+      if (session?.user) await carregarColaborador(session.user.id)
       setCarregando(false)
-    }
-    check()
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        setSession(session)
+        if (session?.user) {
+          await carregarColaborador(session.user.id)
+        } else {
+          setColaborador(null)
+        }
+      }
+    )
+
+    return () => listener.subscription.unsubscribe()
   }, [])
 
+  async function entrar(celular, senha) {
+    const email = celularParaEmail(celular)
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password: senha,
+    })
+    return { error }
+  }
+
+  async function sair() {
+    await supabase.auth.signOut()
+  }
+
   return (
-    <AuthContext.Provider value={{colaborador, setColaborador, carregando}}>
+    <AuthContext.Provider
+      value={{ session, colaborador, carregando, entrar, sair }}
+    >
       {children}
     </AuthContext.Provider>
   )
 }
 
-export function useAuth(){
+export function useAuth() {
   return useContext(AuthContext)
 }

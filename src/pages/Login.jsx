@@ -1,35 +1,95 @@
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 
-export default function Login(){
+function formatarCelular(valor) {
+  const n = valor.replace(/\D/g, '').slice(0, 11)
+  if (n.length <= 2) return n
+  if (n.length <= 7) return `(${n.slice(0, 2)}) ${n.slice(2)}`
+  return `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}`
+}
+
+export default function Login() {
+  const { entrar } = useAuth()
   const [celular, setCelular] = useState('')
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
+  const [enviando, setEnviando] = useState(false)
 
-  function handleLogin(e){
+  async function handleSubmit(e) {
     e.preventDefault()
-    const celLimpo = celular.replace(/\D/g,'')
-    if(celLimpo.includes('13981114362') && senha === '4362'){
-      localStorage.setItem('colaborador', JSON.stringify({
-        id: '40f343f6-098f-4a96-a079-de8002abd7c6',
-        nome: 'Andre',
-        celular: '(13) 98111-4362',
-        cargo: 'dono'
-      }))
-      window.location.href = '/'
-    } else {
-      setErro('Use (13) 98111-4362 e senha 4362')
+    setErro('')
+    setEnviando(true)
+    const { error } = await entrar(celular, senha)
+    setEnviando(false)
+    if (error) {
+      setErro('Celular ou senha incorretos.')
     }
   }
 
   return (
-    <div style={{minHeight:'100vh', background:'#0A0A0A', display:'flex', alignItems:'center', justifyContent:'center', padding:20}}>
-      <div style={{background:'#1a1a1a', padding:32, borderRadius:16, width:'100%', maxWidth:380, border:'1px solid #C9A86A'}}>
-        <h1 style={{color:'#C9A86A', fontSize:28, fontWeight:'bold', textAlign:'center'}}>Cell Controle</h1>
-        <form onSubmit={handleLogin} style={{marginTop:24}}>
-          <input value={celular} onChange={e=>setCelular(e.target.value)} placeholder="(13) 98111-4362" style={{width:'100%', padding:12, borderRadius:8, background:'#0A0A0A', border:'1px solid #333', color:'#fff', marginBottom:12}} />
-          <input type="password" value={senha} onChange={e=>setSenha(e.target.value)} placeholder="4362" style={{width:'100%', padding:12, borderRadius:8, background:'#0A0A0A', border:'1px solid #333', color:'#fff', marginBottom:16}} />
-          {erro && <div style={{color:'#ff4444', fontSize:13, marginBottom:12, textAlign:'center'}}>{erro}</div>}
-          <button type="submit" style={{width:'100%', padding:14, borderRadius:8, background:'#C9A86A', color:'#000', fontWeight:'bold', border:'none'}}>Entrar</button>
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-(--color-bg)">
+      <div className="w-full max-w-sm">
+        {/* Signature: quadro de leitura, referência ao scan de IMEI/código de barras */}
+        <div className="scan-frame mx-auto mb-8 w-20 h-20 flex items-center justify-center">
+          <span
+            className="font-(family-name:--font-display) text-2xl font-bold tracking-tight text-(--color-accent)"
+          >
+            DC
+          </span>
+        </div>
+
+        <h1 className="font-(family-name:--font-display) text-2xl font-semibold text-center text-(--color-text)">
+          Duda Cell Celulares
+        </h1>
+        <p className="text-center text-(--color-text-dim) text-sm mt-1 mb-8">
+          Gestão de estoque, vendas e caixa
+        </p>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div>
+            <label className="block text-xs font-medium text-(--color-text-dim) mb-1.5 uppercase tracking-wide">
+              Celular
+            </label>
+            <input
+              type="tel"
+              inputMode="numeric"
+              autoComplete="tel"
+              placeholder="(13) 98111-4362"
+              value={celular}
+              onChange={(e) => setCelular(formatarCelular(e.target.value))}
+              required
+              className="w-full rounded-lg bg-(--color-surface) border border-(--color-border) px-4 py-3.5 text-(--color-text) font-(family-name:--font-mono) text-base placeholder:text-(--color-text-faint) focus:outline-none focus:ring-2 focus:ring-(--color-accent) focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-(--color-text-dim) mb-1.5 uppercase tracking-wide">
+              Senha
+            </label>
+            <input
+              type="password"
+              autoComplete="current-password"
+              placeholder="••••"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              required
+              className="w-full rounded-lg bg-(--color-surface) border border-(--color-border) px-4 py-3.5 text-(--color-text) font-(family-name:--font-mono) text-base placeholder:text-(--color-text-faint) focus:outline-none focus:ring-2 focus:ring-(--color-accent) focus:border-transparent"
+            />
+          </div>
+
+          {erro && (
+            <p className="text-(--color-out) text-sm" role="alert">
+              {erro}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={enviando}
+            className="mt-2 w-full rounded-lg bg-(--color-accent) text-(--color-bg) font-semibold py-3.5 active:opacity-80 disabled:opacity-50 transition-opacity"
+          >
+            {enviando ? 'Entrando...' : 'Entrar'}
+          </button>
         </form>
       </div>
     </div>
